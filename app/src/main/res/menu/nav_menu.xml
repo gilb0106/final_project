@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/Home"
+        android:title="Home"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/searchImages"
+        android:title="Search Images"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/savedImages"
+        android:title="Saved Images"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/Exit"
+        android:title="Exit"
+        app:showAsAction="never"/>
+
+
+</menu>
