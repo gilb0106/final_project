@@ -86,16 +86,15 @@ public class SavedActivity extends AppCompatActivity {
         savedImagesAdapter.notifyDataSetChanged();
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            Intent intent = new Intent(SavedActivity.this, MainActivity.class);
-            startActivity(intent);
+            onBackPressed();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

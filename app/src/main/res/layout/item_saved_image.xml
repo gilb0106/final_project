@@ -13,18 +13,5 @@
         android:textStyle="bold"
         android:layout_marginTop="8dp"/>
 
-    <TextView
-        android:id="@+id/textViewURL"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewDate"
-        android:layout_marginTop="8dp"/>
-
-    <TextView
-        android:id="@+id/textViewHDURL"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewURL"
-        android:layout_marginTop="8dp"/>
 
 </RelativeLayout>
