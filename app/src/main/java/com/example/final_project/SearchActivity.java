@@ -1,12 +1,17 @@
 package com.example.final_project;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +22,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -25,9 +29,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -77,6 +84,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
     }
+
     private void showDatePicker() {
         final Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -100,33 +108,17 @@ public class SearchActivity extends AppCompatActivity {
                 year, month, day);
         datePickerDialog.show();
     }
+
     private void fetchNASAImage(String date) {
         FetchImageTask task = new FetchImageTask();
         task.execute(date);
     }
+
     private class FetchImageTask extends AsyncTask<String, Integer, JSONObject> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
-            buttonSave.setVisibility(View.GONE); // Hide save button initially
-        }
-
         @Override
         protected JSONObject doInBackground(String... params) {
-            // Simulating a delay of 5 seconds
-            for (int i = 0; i <= 100; i++) {
-                try {
-                    Thread.sleep(50); // Sleep for 50 milliseconds to simulate progress
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                publishProgress(i); // Publish the progress
-            }
-
             String date = params[0];
-            String apiKey = "DgPLcIlnmN0Cwrzcg3e9NraFaYLIDI68Ysc6Zh3d";
+            String apiKey = "KXhsciARcQGmkCjJgMcsQrlWKD9IrTdKhRnloLbo";
             String apiUrl = "https://api.nasa.gov/planetary/apod?api_key=" +
                     apiKey + "&date=" + date;
             HttpURLConnection connection = null;
@@ -136,7 +128,8 @@ public class SearchActivity extends AppCompatActivity {
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                BufferedReader reader = new BufferedReader(new
+                        InputStreamReader(connection.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
                     response.append(line);
@@ -151,40 +144,51 @@ public class SearchActivity extends AppCompatActivity {
             }
             return null;
         }
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-            progressBar.setProgress(values[0]); // Update the progress bar
-        }
+
+
         @Override
         protected void onPostExecute(JSONObject jsonResponse) {
-            super.onPostExecute(jsonResponse);
-            progressBar.setVisibility(View.GONE);
             if (jsonResponse != null) {
                 try {
                     String imageUrl = jsonResponse.getString("url");
-                    String hdUrl = jsonResponse.getString("hdurl");
+                    String hdUrl = jsonResponse.has("hdurl") ? jsonResponse.getString("hdurl") : "";
                     String date = jsonResponse.getString("date");
-                    new LoadImageTask().execute(imageUrl);
-                    textViewURL.setText("URL: " + imageUrl);
                     textViewDate.setText("Date: " + date);
+                    textViewURL.setText("URL: " + imageUrl);
                     textViewHDURL.setText("HDURL: " + hdUrl);
-                    textViewHDURL.setVisibility(View.VISIBLE); // Show HD URL
-                    // Make URLs clickable
-                    textViewURL.setOnClickListener(new View.OnClickListener() {
+                    // Load image asynchronously
+                    new AsyncTask<Void, Void, Bitmap>() {
                         @Override
-                        public void onClick(View v) {
-                            openURL(imageUrl);
+                        protected Bitmap doInBackground(Void... voids) {
+                            try {
+                                URL url = new URL(imageUrl);
+                                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                                connection.setDoInput(true);
+                                connection.connect();
+                                InputStream input = connection.getInputStream();
+                                return BitmapFactory.decodeStream(input);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return null;
                         }
-                    });
-                    textViewHDURL.setOnClickListener(new View.OnClickListener() {
+
                         @Override
-                        public void onClick(View v) {
-                            openURL(hdUrl);
+                        protected void onPostExecute(Bitmap bitmap) {
+                            super.onPostExecute(bitmap);
+                            if (bitmap != null) {
+                                // Display the bitmap
+                                imageView.setImageBitmap(bitmap);
+                                imageView.setVisibility(View.VISIBLE);
+
+                                // Save the bitmap to the device if needed
+                                saveBitmapToStorage(bitmap, date);
+                            } else {
+                                Toast.makeText(SearchActivity.this, "Failed to load image", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    });
-                    // Show save button
-                    buttonSave.setVisibility(View.VISIBLE);
+                    }.execute();
+                    textViewHDURL.setText("HDURL: " + hdUrl);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(SearchActivity.this, "Failed to parse response", Toast.LENGTH_SHORT).show();
@@ -194,53 +198,73 @@ public class SearchActivity extends AppCompatActivity {
             }
         }
     }
-    private class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
 
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            String imageUrl = strings[0];
-            Bitmap bitmap = null;
-            try {
-                URL url = new URL(imageUrl);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                bitmap = BitmapFactory.decodeStream(input);
-            } catch (IOException e) {
-                e.printStackTrace();
+    private void saveBitmapToStorage(final Bitmap bitmap, final String date) {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                String fileName = date + ".jpg";
+                File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
+                try (OutputStream outputStream = new FileOutputStream(file)) {
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                    return file.getAbsolutePath();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
             }
-            return bitmap;
-        }
 
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            if (bitmap != null) {
-                imageView.setImageBitmap(bitmap);
-            } else {
-                Toast.makeText(SearchActivity.this, "Failed to load image", Toast.LENGTH_SHORT).show();
+            @Override
+            protected void onPostExecute(String filePath) {
+                super.onPostExecute(filePath);
+                if (filePath != null) {
+                    Toast.makeText(SearchActivity.this, "Bitmap saved to " + filePath, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SearchActivity.this, "Failed to save bitmap", Toast.LENGTH_SHORT).show();
+                }
             }
-        }
+        }.execute();
     }
     private void saveToDatabase() {
         // Access the image URL, HD URL, and other relevant information from your UI elements
-        String imageUrl = textViewURL.getText().toString().substring(4);
-        String hdUrl = textViewHDURL.getText().toString().substring(5);
+        String imageUrl = textViewURL.getText().toString().substring(5);
+        String hdUrl = textViewHDURL.getText().toString().substring(6);
         String date = textViewDate.getText().toString().substring(6);
+
         // Call the database insertion method
-        DBConnect dbConnect = new DBConnect(this);
+        DBConnect dbConnect = new DBConnect(SearchActivity.this);
         long result = dbConnect.insertData(date, imageUrl, hdUrl);
 
         // Check the result of the insertion operation
         if (result != -1) {
             // Database insertion successful
-            Toast.makeText(this, "Data saved to database successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SearchActivity.this, "Data saved to database successfully", Toast.LENGTH_SHORT).show();
+
+            // Save the bitmap to the device
+            BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+            Bitmap bitmap = drawable.getBitmap();
+
+            // Get the directory where the image was previously saved
+            ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
+            File directory = contextWrapper.getDir("images", Context.MODE_PRIVATE);
+            File filePath = new File(directory, date + ".jpg");
+
+            try {
+                // Save bitmap to internal storage
+                FileOutputStream fileOutputStream = new FileOutputStream(filePath);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+                fileOutputStream.close();
+                Toast.makeText(this, "Image saved to device", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show();
+            }
         } else {
             // Database insertion failed
-            Toast.makeText(this, "Failed to save data to database", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SearchActivity.this, "Failed to save data to database", Toast.LENGTH_SHORT).show();
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -250,9 +274,5 @@ public class SearchActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-    private void openURL(String url) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        startActivity(browserIntent);
     }
 }

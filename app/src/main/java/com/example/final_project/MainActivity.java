@@ -1,12 +1,21 @@
 package com.example.final_project;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +36,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -35,15 +46,16 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
+
     private TextView textViewHeading;
     private TextView textViewTodaysDate;
     private ImageView imageViewTodaysImage;
     private TextView textViewImageURL;
     private TextView textViewHDImageURL;
     private DrawerLayout drawerLayout;
+    private String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +77,90 @@ public class MainActivity extends AppCompatActivity implements
         textViewImageURL = findViewById(R.id.textViewImageURL);
         textViewHDImageURL = findViewById(R.id.textViewHDImageURL);
 
+        // Check if user's name is saved in SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        userName = sharedPreferences.getString("userName", "");
+
+        if (userName.isEmpty()) {
+            // If user's name is not saved, prompt the user to enter their name
+            showNameDialog();
+        } else {
+            // If user's name is saved, ask the user if they want to keep it or enter a new one
+            askUserToKeepOrEnterNew();
+        }
+
         fetchNASAImage();
     }
-    private void fetchNASAImage() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu); // For Toolbar
+        return true;  // inflate menu_toolbar to display images out of overflow on top right of toolbar
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        String message = null;
+        int id = item.getItemId();
+        if (id == R.id.Choice1) {
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.Choice2) {
+            Intent intent = new Intent(this, SavedActivity.class);
+            startActivity(intent);
+        } //  if item from menu_toolbar selected, display applicable toast message
+        return true;
+    }
+    private void askUserToKeepOrEnterNew() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Welcome back");
+        builder.setMessage("Do you want to keep using the name '" + userName + "'?");
+
+        // Set up the buttons
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Personalize the greeting with the saved user's name
+                textViewHeading.setText("Hello " + userName + " Welcome To NASA Image App");
+            }
+        });
+        builder.setNegativeButton("No, enter a new name", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Prompt the user to enter a new name
+                showNameDialog();
+            }
+        });
+        builder.setCancelable(false); // Prevent dismissing the dialog by clicking outside
+        builder.show();
+    }
+
+    private void showNameDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Welcome");
+        builder.setMessage("Please enter your name to personalize the experience:");
+
+        // Set up the input
+        final EditText input = new EditText(this);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                userName = input.getText().toString();
+                // Save user's name to SharedPreferences
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("userName", userName);
+                editor.apply();
+                // Personalize the greeting
+                textViewHeading.setText("Hello " + userName + " Welcome To NASA Image App");
+            }
+        });
+        builder.setCancelable(false); // Prevent dismissing the dialog by clicking outside
+        builder.show();
+    }
+
+    private void fetchNASAImage() { // Fetch todays date to send to async task
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",
                 Locale.getDefault());
@@ -76,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements
         FetchImageTask task = new FetchImageTask();
         task.execute(todayDate);
     }
+
     private class FetchImageTask extends AsyncTask<String, Integer, JSONObject> {
         @Override
         protected JSONObject doInBackground(String... params) {
@@ -106,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements
             }
             return null;
         }
+
         @Override
         protected void onPostExecute(JSONObject jsonResponse) {
             if (jsonResponse != null) {
@@ -113,47 +208,46 @@ public class MainActivity extends AppCompatActivity implements
                     String imageUrl = jsonResponse.getString("url");
                     String hdUrl = jsonResponse.getString("hdurl");
                     String date = jsonResponse.getString("date");
-
                     textViewTodaysDate.setText(date);
                     textViewImageURL.setText("URL: " + imageUrl);
-                    new LoadImageTask().execute(imageUrl);
+                    // Load image asynchronously
+                    new AsyncTask<Void, Void, Bitmap>() {
+                        @Override
+                        protected Bitmap doInBackground(Void... voids) {
+                            try {
+                                URL url = new URL(imageUrl);
+                                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                                connection.setDoInput(true);
+                                connection.connect();
+                                InputStream input = connection.getInputStream();
+                                return BitmapFactory.decodeStream(input);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
+                        @Override
+                        protected void onPostExecute(Bitmap bitmap) {
+                            super.onPostExecute(bitmap);
+                            if (bitmap != null) {
+                                // Display the bitmap
+                                imageViewTodaysImage.setImageBitmap(bitmap);
+                                imageViewTodaysImage.setVisibility(View.VISIBLE);
+
+                                // Save the bitmap to the device if needed
+                                // Code for saving image to device can be added here
+                            } else {
+                                Toast.makeText(MainActivity.this, "Failed to load image", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }.execute();
                     textViewHDImageURL.setText("HDURL: " + hdUrl);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(MainActivity.this,
-                            "Failed to parse response", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Failed to parse response", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(MainActivity.this,
-                        "Failed to fetch image", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-    private class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            String imageUrl = strings[0];
-            Bitmap bitmap = null;
-            try {
-                URL url = new URL(imageUrl);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                bitmap = BitmapFactory.decodeStream(input);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return bitmap;
-        }
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            if (bitmap != null) {
-                imageViewTodaysImage.setImageBitmap(bitmap);
-            } else {
-                Toast.makeText(MainActivity.this,
-                        "Failed to load image", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Failed to fetch image", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -171,9 +265,8 @@ public class MainActivity extends AppCompatActivity implements
             Intent intent = new Intent(this, SavedActivity.class);
             startActivity(intent);
         } else if (id == R.id.Exit) {
-            // Handle the Exit action
+            finishAffinity(); // close app
         }
-
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -183,15 +276,37 @@ public class MainActivity extends AppCompatActivity implements
         // Remove "URL: " prefix
         String hdImageUrl = textViewHDImageURL.getText().toString().substring(7);
         // Remove "HDURL: " prefix
-
         DBConnect dbConnect = new DBConnect(this);
         long result = dbConnect.insertData(date, imageUrl, hdImageUrl);
         if (result != -1) {
-            Toast.makeText(this, "Image details saved to database",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Image details saved to database", Toast.LENGTH_SHORT).show();
+            // Save the image to device
+            BitmapDrawable drawable = (BitmapDrawable) imageViewTodaysImage.getDrawable();
+            Bitmap bitmap = drawable.getBitmap();
+            try {
+                // Save bitmap to internal storage
+                ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
+                File directory = contextWrapper.getDir("images", Context.MODE_PRIVATE);
+                File filePath = new File(directory, date + ".jpg");
+                FileOutputStream fileOutputStream = new FileOutputStream(filePath);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+                fileOutputStream.close();
+                // Provide feedback to the user
+                Toast.makeText(this, "Image saved to device", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show();
+            }
         } else {
-            Toast.makeText(this, "Failed to save image details",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Failed to save image details", Toast.LENGTH_SHORT).show();
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
         }
     }
 }

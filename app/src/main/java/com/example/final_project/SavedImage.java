@@ -4,6 +4,7 @@ public class SavedImage {
     private String date;
     private String imageUrl;
     private String hdUrl;
+    private String imageFilePath;
 
     public SavedImage(String date, String imageUrl, String hdUrl) {
         this.date = date;
@@ -21,5 +22,9 @@ public class SavedImage {
 
     public String getHdUrl() {
         return hdUrl;
+    }
+
+    public String getImageFilePath() {
+        return imageFilePath;
     }
 }

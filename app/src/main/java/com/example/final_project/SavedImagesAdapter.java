@@ -2,25 +2,18 @@ package com.example.final_project;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
+import android.content.ContextWrapper;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.File;
 import java.util.List;
 
 public class SavedImagesAdapter extends ArrayAdapter<SavedImage> {
@@ -43,12 +36,9 @@ public class SavedImagesAdapter extends ArrayAdapter<SavedImage> {
         SavedImage savedImage = savedImageList.get(position);
 
         TextView textViewDate = convertView.findViewById(R.id.textViewDate);
-        TextView textViewURL = convertView.findViewById(R.id.textViewURL);
-        TextView textViewHDURL = convertView.findViewById(R.id.textViewHDURL);
 
+        // Display only the date in the list item
         textViewDate.setText("Date: " + savedImage.getDate());
-        textViewURL.setText("URL: " + savedImage.getImageUrl());
-        textViewHDURL.setText("HD URL: " + savedImage.getHdUrl());
 
         // Handle item click event
         convertView.setOnClickListener(view -> {
@@ -57,10 +47,11 @@ public class SavedImagesAdapter extends ArrayAdapter<SavedImage> {
                     .setMessage("Do you wish to view the image or delete?")
                     .setPositiveButton("View Image", (dialog, which) -> {
                         // Launch fragment to view image
-                        String imageUrl = savedImageList.get(position).getImageUrl();
                         ImageViewFragment fragment = new ImageViewFragment();
                         Bundle args = new Bundle();
-                        args.putString("imageUrl", imageUrl);
+                        args.putString("date", savedImage.getDate());
+                        args.putString("imageUrl", savedImage.getImageUrl());
+                        args.putString("hdUrl", savedImage.getHdUrl());
                         fragment.setArguments(args);
                         ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, fragment)
@@ -69,16 +60,32 @@ public class SavedImagesAdapter extends ArrayAdapter<SavedImage> {
                     })
                     .setNegativeButton("Delete", (dialog, which) -> {
                         // Delete record from database
-                        String imageUrl = savedImageList.get(position).getImageUrl();
+                        String imageUrl = savedImage.getImageUrl();
                         DBConnect dbConnect = new DBConnect(context);
-                        dbConnect.deleteSavedImage(imageUrl);
-                        // Remove item from the list
-                        savedImageList.remove(position);
-                        notifyDataSetChanged();
-                        Toast.makeText(context, "Image deleted", Toast.LENGTH_SHORT).show();
-                    })
-                    .setNeutralButton("Cancel", null)
-                    .show();
+                        long result = dbConnect.deleteSavedImage(imageUrl);
+                        if (result != -1) {
+                            // Delete local copy of bitmap
+                            try {
+                                ContextWrapper contextWrapper = new ContextWrapper(context.getApplicationContext());
+                                File directory = contextWrapper.getDir("images", Context.MODE_PRIVATE);
+                                File filePath = new File(directory, savedImage.getDate() + ".jpg");
+                                if (filePath.exists()) {
+                                    filePath.delete();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            // Remove item from the list
+                            savedImageList.remove(position);
+                            notifyDataSetChanged();
+                            Toast.makeText(context, "Image deleted", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Failed to delete image", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+            builder.show();
         });
 
         return convertView;

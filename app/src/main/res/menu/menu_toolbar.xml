@@ -2,13 +2,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/Choice1"
-        android:icon="@drawable/bottle"
+        android:icon="@drawable/search"
         android:title="choice1"
         app:showAsAction="always"/>
 
     <item
         android:id="@+id/Choice2"
-        android:icon="@drawable/bottle"
+        android:icon="@drawable/img"
         android:title="choice2"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/Choice3"
+        android:icon="@drawable/help"
+        android:title="choice3"
         app:showAsAction="always"/>
 </menu>

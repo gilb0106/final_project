@@ -1,109 +1,94 @@
 package com.example.final_project;
 
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.File;
 
 public class ImageViewFragment extends Fragment {
-
     private ImageView imageView;
-    private ListView listView;
+    private SavedImage savedImage;
+    private TextView textViewDate;
+    private TextView textViewURL;
+    private TextView textViewHDURL;
+    private ListView listViewSavedImages;
 
-    public ImageViewFragment() {
-        // Required empty public constructor
-    }
+    public ImageViewFragment() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_image_view, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_image_details, container, false);
+
         imageView = rootView.findViewById(R.id.imageView);
+        textViewDate = rootView.findViewById(R.id.textViewDate);
+        textViewURL = rootView.findViewById(R.id.textViewURL);
+        textViewHDURL = rootView.findViewById(R.id.textViewHDURL);
+        listViewSavedImages = getActivity().findViewById(R.id.listViewSavedImages);
 
-        // Retrieve the image URL from arguments
-        String imageUrl = getArguments().getString("imageUrl");
+        Bundle args = getArguments();
+        if (args != null && args.containsKey("date") && args.containsKey("imageUrl") && args.containsKey("hdUrl")) {
+            String date = args.getString("date");
+            String imageUrl = args.getString("imageUrl");
+            String hdUrl = args.getString("hdUrl");
+            savedImage = new SavedImage(date, imageUrl, hdUrl);
 
-        // Remove the "URL: " prefix from imageUrl
-        imageUrl = imageUrl.replace("URL: ", "");
+            textViewDate.setText("Date: " + savedImage.getDate());
+            textViewURL.setText("URL: " + savedImage.getImageUrl());
+            textViewURL.setMovementMethod(LinkMovementMethod.getInstance());
+            textViewHDURL.setText("HD URL: " + savedImage.getHdUrl());
+            textViewHDURL.setMovementMethod(LinkMovementMethod.getInstance());
 
-        // Load the image using AsyncTask
-        new FetchImageTask(imageView).execute(imageUrl);
-        setHasOptionsMenu(true);
+            loadImageFromStorage(savedImage.getDate());
 
+            if (listViewSavedImages != null) {
+                listViewSavedImages.setVisibility(View.GONE);
+            }
+        }
 
         return rootView;
     }
 
-    // Handle back arrow press
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        // Check if the back arrow is pressed
-        if (item.getItemId() == android.R.id.home) {
-            // Navigate back to SavedActivity
-            requireActivity().onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        // Enable ListView item click listener when fragment is destroyed
-        listView.setEnabled(true);
-    }
-
-    private static class FetchImageTask extends AsyncTask<String, Void, Bitmap> {
-
-        private ImageView imageView;
-
-        public FetchImageTask(ImageView imageView) {
-            this.imageView = imageView;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            String imageUrl = params[0];
-
-            Bitmap bitmap = null;
-            try {
-                URL url = new URL(imageUrl);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                bitmap = BitmapFactory.decodeStream(input);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
+    private void loadImageFromStorage(String date) {
+        try {
+            ContextWrapper contextWrapper = new ContextWrapper(getActivity().getApplicationContext());
+            File directory = contextWrapper.getDir("images", Context.MODE_PRIVATE);
+            File filePath = new File(directory, date + ".jpg");
+            Bitmap bitmap = BitmapFactory.decodeFile(filePath.getAbsolutePath());
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
                 imageView.setVisibility(View.VISIBLE);
             } else {
-                Toast.makeText(imageView.getContext(), "Failed to load image",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Failed to load image", Toast.LENGTH_SHORT).show();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getActivity(), "Failed to load image", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            getActivity().getSupportFragmentManager().popBackStack();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -54,10 +54,11 @@ public class DBConnect extends SQLiteOpenHelper {
         String[] projection = {COLUMN_IMAGE_DATE, COLUMN_NASA_URL, COLUMN_HD_URL}; // Columns to retrieve
         return db.query(TABLE_MYNASA, projection, null, null, null, null, null);
     }
-    public void deleteSavedImage(String imageUrl) {
+    public long deleteSavedImage(String imageUrl) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_MYNASA, COLUMN_NASA_URL + " = ?", new String[]{imageUrl});
+        long result = db.delete(TABLE_MYNASA, COLUMN_NASA_URL + " = ?", new String[]{imageUrl});
         db.close();
+        return result;
     }
     public void undoDeleteImage(String imageUrl) {
         SQLiteDatabase db = this.getWritableDatabase();
