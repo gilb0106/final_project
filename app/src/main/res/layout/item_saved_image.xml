@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:padding="16dp">
 
-
     <TextView
         android:id="@+id/textViewDate"
         android:layout_width="wrap_content"

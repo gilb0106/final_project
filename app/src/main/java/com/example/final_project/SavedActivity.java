@@ -92,6 +92,7 @@ public class SavedActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
+            listViewSavedImages.setVisibility(View.VISIBLE);
             onBackPressed();
             return true;
         }
