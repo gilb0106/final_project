@@ -1,12 +1,15 @@
 package com.example.final_project;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -42,6 +45,7 @@ public class RandomActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.random);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         textViewRandomDate = findViewById(R.id.textViewRandomDate);
@@ -57,6 +61,41 @@ public class RandomActivity extends AppCompatActivity {
         Button generateButton = findViewById(R.id.generateButton);
         generateButton.setOnClickListener(v -> generateRandomImage());
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu); // For Toolbar
+        return true;  // inflate menu_toolbar to display images out of overflow on top right of toolbar
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.Choice1) {
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.Choice2) {
+            Intent intent = new Intent(this, SavedActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.Choice3) {
+            Intent intent = new Intent(this, RandomActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.Choice4) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(getString(R.string.randomhelp))
+                    .setPositiveButton("OK", (dialog, id1) -> {
+                        // User clicked OK button, dismiss the dialog
+                        dialog.dismiss();
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        } else if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void generateRandomImage() {
         Calendar calendar = Calendar.getInstance();
@@ -101,11 +140,11 @@ public class RandomActivity extends AppCompatActivity {
                     String imageUrl = jsonResponse.getString("url");
                     String hdUrl = jsonResponse.getString("hdurl");
 
-                    textViewRandomDate.setText("Date: " + jsonResponse.getString("date"));
+                    textViewRandomDate.setText(getString(R.string.date) + jsonResponse.getString("date"));
                     textViewRandomDate.setVisibility(View.VISIBLE); // Set date visible after image is loaded
-                    textViewRandomImageURL.setText("Image URL: " + imageUrl);
+                    textViewRandomImageURL.setText(getString(R.string.url) + imageUrl);
                     textViewRandomImageURL.setVisibility(View.VISIBLE); // Set image URL visible after image is loaded
-                    textViewRandomHDImageURL.setText("HD Image URL: " + hdUrl);
+                    textViewRandomHDImageURL.setText(getString(R.string.hdurl) + hdUrl);
                     textViewRandomHDImageURL.setVisibility(View.VISIBLE); // Set HD image URL visible after image is loaded
 
                     new AsyncTask<String, Void, Bitmap>() {
@@ -148,6 +187,7 @@ public class RandomActivity extends AppCompatActivity {
             }
         }
     }
+
     public void saveImage(View view) {
         String date = textViewRandomDate.getText().
                 toString().replace("Date: ", "");
@@ -177,15 +217,5 @@ public class RandomActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, R.string.fail, Toast.LENGTH_SHORT).show();
         }
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/imageViewRandomImage"
         android:text="@string/url"
+        android:autoLink="web"
         android:textSize="17sp"
         android:textStyle="bold" />
 
@@ -39,6 +40,7 @@
         android:id="@+id/textViewRandomHDImageURL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:autoLink="web"
         android:layout_below="@id/textViewRandomImageURL"
         android:text="@string/hdurl"
         android:textSize="17sp"

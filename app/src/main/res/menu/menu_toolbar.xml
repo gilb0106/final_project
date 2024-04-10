@@ -3,24 +3,24 @@
     <item
         android:id="@+id/Choice1"
         android:icon="@drawable/search"
-        android:title="choice1"
-        app:showAsAction="always"/>
+        android:title="@string/searchimg"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/Choice2"
         android:icon="@drawable/img"
-        android:title="choice2"
-        app:showAsAction="always"/>
+        android:title="@string/saved"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/Choice3"
         android:icon="@drawable/lotto"
-        android:title="choice3"
-        app:showAsAction="always"/>
+        android:title="@string/random"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/Choice4"
         android:icon="@drawable/help"
         android:title="@string/help"
-        app:showAsAction="collapseActionView"/>
+        app:showAsAction="ifRoom"/>
 </menu>

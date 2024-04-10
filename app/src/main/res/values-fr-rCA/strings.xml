@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">NasaImg 1.0</string>
+    <string name="navigation_drawer_open">Ouvrir le tiroir de navigation</string>
+    <string name="navigation_drawer_close">Fermer le tiroir de navigation</string>
+    <string name="help">Aide</string>
+    <string name="cancel">Annuler</string>
+    <string name="home">Accueil</string>
+    <string name="saved">Images sauvegardées</string>
+    <string name="savedsuccess">Images sauvegardées avec succès</string>
+    <string name="dbfail">Échec de lenregistrement des données dans la base de données</string>
+    <string name="random">Images aléatoires</string>
+    <string name="searchimg">Rechercher des images</string>
+    <string name="exits">Sortie</string>
+    <string name="hello">Bonjour et bienvenue dans lapplication dimages de la NASA</string>
+    <string name="today">Image du jour</string>
+    <string name="date">Date : </string>
+    <string name="url">URL: </string>
+    <string name="hdurl">HDURL: </string>
+    <string name="genrand">Générer une image aléatoire</string>
+    <string name="save">Sauvegarder</string>
+    <string name="enterdate">Entrer la date (AAAA-MM-JJ)</string>
+    <string name="search">Rechercher</string>
+    <string name="fail">Échec du chargement de limage</string>
+    <string name="failfetch">Échec de la récupération de limage</string>
+    <string name="successfetch">Récupération de limage réussie</string>
+    <string name="welcome">Bienvenue de retour</string>
+    <string name="changeuser">Voulez-vous continuer à utiliser le nom</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non, entrez un nouveau nom</string>
+    <string name="greet">Bonjour</string>
+    <string name="greet2">Bienvenue a la aplicación de imágenes de la NASA</string>
+    <string name="personalgreet">Bienvenidoa</string>
+    <string name="personalgreet2">Por favor, ingresa tu nombre para personalizar la experiencia:</string>
+    <string name="deletesuccess">Imagen eliminada</string>
+    <string name="deletefail">No se pudo eliminar la imagen</string>
+    <string name="question">¿Deseas ver la imagen o eliminarla?</string>
+    <string name="view">Ver</string>
+    <string name="delete">Eliminar</string>
+    <string name="searchhelp">Bienvenido a la búsqueda de imágenes. Aquí puedes escribir manualmente una fecha como YYYY-MM-DD o usar el calendario haciendo clic en el botón de búsqueda. Una vez que se carga la imagen, puedes hacer clic en Guardar para guardar una copia.</string>
+    <string name="homehelp">Bienvenue sur la page daccueil des images de la NASA. Ici, vous pouvez voir limage de la NASA du jour ! Cliquez sur Enregistrer pour la consulter ultérieurement sur lappareil. Veuillez utiliser notre navigation ou les icônes de la barre doutils pour explorer lapplication.</string>
+    <string name="savedhelp">Bienvenue dans Enregistrer les images, ici toutes vos images enregistrées sont répertoriées par date. Cliquez sur nimporte quelle date pour que limage et ses détails soient chargés dans un fragment à partir du stockage local de lappareil et de la base de données SQLite.</string>
+
+    <string name="randomhelp">Bienvenue dans les images aléatoires. Vous pouvez cliquer sur le bouton Générer une image pour obtenir une image aléatoire par date. Si vous aimez limage, vous pouvez cliquer sur Enregistrer pour la consulter ultérieurement.</string>
+</resources>

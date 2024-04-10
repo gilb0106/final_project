@@ -1,9 +1,11 @@
 package com.example.final_project;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
@@ -26,6 +28,7 @@ public class SavedActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.saved);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         listViewSavedImages = findViewById(R.id.listViewSavedImages);
@@ -51,6 +54,40 @@ public class SavedActivity extends AppCompatActivity {
                     .addToBackStack(null)
                     .commit();
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu); // For Toolbar
+        return true;  // inflate menu_toolbar to display images out of overflow on top right of toolbar
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.Choice1) {
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.Choice2) {
+            Intent intent = new Intent(this, SavedActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.Choice3) {
+            Intent intent = new Intent(this, RandomActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.Choice4) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(getString(R.string.savedhelp))
+                    .setPositiveButton("OK", (dialog, id1) -> {
+                        // User clicked OK button, dismiss the dialog
+                        dialog.dismiss();
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        } else if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void fetchSavedImages() {
@@ -86,16 +123,4 @@ public class SavedActivity extends AppCompatActivity {
         savedImagesAdapter.notifyDataSetChanged();
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            listViewSavedImages.setVisibility(View.VISIBLE);
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

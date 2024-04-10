@@ -16,7 +16,7 @@
     <string name="today">Today\'sImage</string>
     <string name="date">Date: </string>
     <string name="url">URL: </string>
-    <string name="hdurl">URL: </string>
+    <string name="hdurl">HDURL: </string>
     <string name="genrand">Generate Random Image</string>
     <string name="save">Save</string>
     <string name="enterdate">Enter Date (YYYY-MM-DD)</string>
@@ -35,9 +35,10 @@
     <string name="deletesuccess">Image deleted</string>
     <string name="deletefail">Failed to delete image</string>
     <string name="question">Do you wish to view the image or delete?</string>
-    <string name="view">Failed to delete image</string>
-    <string name="delete">Failed to delete image</string>
-
-
-
+    <string name="view">View</string>
+    <string name="delete">Delete</string>
+    <string name="searchhelp">Welcome to Search Images, here you can manually type a date like YYYY-MM-DD or use the calendar by clicking the Search Button. Once the image is loaded, you can click Save to save a copy.</string>
+    <string name="homehelp">Welcome to Nase Images Home, here you can see todays Nasa Image! Click save to view it later on the device. Please user our navigation or toolbar icons to explore the app</string>
+    <string name="savedhelp">Welcome to Save Images, here all your saved images are listed by date. Click on any date for the image and its details to be loaded in a fragment from both the devices local storage and SQLite DB</string>
+    <string name="randomhelp">Welcome to Random Images, here you can click the Generate Image button to generate a random image by date, if you like the image you can click save to view it later</string>
 </resources>

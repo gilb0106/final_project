@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import com.example.final_project.DBConnect;
 import com.example.final_project.R;
 import com.example.final_project.SearchActivity;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,9 +62,13 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        // Set the title for this activity in the Toolbar
+        toolbar.setTitleTextColor(Color.WHITE);
+        getSupportActionBar().setTitle(R.string.home);
         drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar,
@@ -108,6 +114,15 @@ public class MainActivity extends AppCompatActivity implements
         } else if (id == R.id.Choice3) {
             Intent intent = new Intent(this, RandomActivity.class);
             startActivity(intent);
+        } else if (id == R.id.Choice4) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(getString(R.string.homehelp))
+                    .setPositiveButton("OK", (dialog, id1) -> {
+                        // User clicked OK button, dismiss the dialog
+                        dialog.dismiss();
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         } //  if item from menu_toolbar selected, display applicable toast message
         return true;
     }
@@ -149,7 +164,17 @@ public class MainActivity extends AppCompatActivity implements
                     editor.putString("userName", userName);
                     editor.apply();
                     // Personalize the greeting
-                    textViewHeading.setText("Hello " + userName + " Welcome To NASA Image App");
+                    textViewHeading.setText(getString(R.string.greet) +" " +userName + " " + getString(R.string.greet2));
+
+                    // Show a Snackbar with an undo option
+                    Snackbar.make(drawerLayout, "Name set to " + userName, Snackbar.LENGTH_LONG)
+                            .setAction("UNDO", v -> {
+                                // Undo action: Clear the entered name and prompt again
+                                userName = "";
+                                editor.putString("userName", userName);
+                                editor.apply();
+                                showNameDialog();
+                            }).show();
                 });
         builder.setCancelable(false); // Prevent dismissing the dialog by clicking outside
         builder.show();
@@ -204,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements
                     String hdUrl = jsonResponse.getString("hdurl");
                     String date = jsonResponse.getString("date");
                     textViewTodaysDate.setText(date);
-                    textViewImageURL.setText("URL: " + imageUrl);
+                    textViewImageURL.setText(getString(R.string.url) + imageUrl);
                     // Load image asynchronously
                     new AsyncTask<Void, Void, Bitmap>() {
                         @Override
@@ -235,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements
                             }
                         }
                     }.execute();
-                    textViewHDImageURL.setText("HDURL: " + hdUrl);
+                    textViewHDImageURL.setText(getString(R.string.hdurl)+ hdUrl);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(MainActivity.this,
