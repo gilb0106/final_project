@@ -96,7 +96,7 @@ public class RandomActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+//Note for this i had to limit to June 15 1995 to properly handle random range
     private void generateRandomImage() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(1995, Calendar.JUNE, 15); // Set minimum date to June 15, 1995

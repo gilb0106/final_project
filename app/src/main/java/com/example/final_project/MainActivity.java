@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements
         FetchImageTask task = new FetchImageTask();
         task.execute(todayDate);
     }
-
+// fetch image via http
     private class FetchImageTask extends AsyncTask<String, Integer, JSONObject> {
         @Override
         protected JSONObject doInBackground(String... params) {

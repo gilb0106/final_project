@@ -15,7 +15,7 @@ public class DBConnect extends SQLiteOpenHelper {
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_IMAGE_DATE = "ImageDate";
     public static final String COLUMN_NASA_URL = "NasaURL";
-    public static final String COLUMN_HD_URL = "HDUrl"; // New column for HD URL
+    public static final String COLUMN_HD_URL = "HDUrl";
 
     // Constructor
     public DBConnect(Context context) {
@@ -28,7 +28,7 @@ public class DBConnect extends SQLiteOpenHelper {
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + COLUMN_IMAGE_DATE + " TEXT, "
                 + COLUMN_NASA_URL + " TEXT, "
-                + COLUMN_HD_URL + " TEXT)"; // Added HD URL column
+                + COLUMN_HD_URL + " TEXT)";
         db.execSQL(createTable);
     }
 
@@ -44,7 +44,7 @@ public class DBConnect extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_IMAGE_DATE, imageDate);
         contentValues.put(COLUMN_NASA_URL, nasaUrl);
-        contentValues.put(COLUMN_HD_URL, hdUrl); // Insert HD URL into database
+        contentValues.put(COLUMN_HD_URL, hdUrl);
         long result = db.insert(TABLE_MYNASA, null, contentValues);
         db.close();
         return result;
