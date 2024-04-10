@@ -45,8 +45,8 @@ public class SavedImagesAdapter extends ArrayAdapter<SavedImage> {
         convertView.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("Options")
-                    .setMessage("Do you wish to view the image or delete?")
-                    .setPositiveButton("View Image", (dialog, which) -> {
+                    .setMessage(R.string.question)
+                    .setPositiveButton(R.string.view, (dialog, which) -> {
                         // Launch fragment to view image
                         ImageViewFragment fragment = new ImageViewFragment();
                         Bundle args = new Bundle();
@@ -60,7 +60,7 @@ public class SavedImagesAdapter extends ArrayAdapter<SavedImage> {
                                 .addToBackStack(null)
                                 .commit();
                     })
-                    .setNegativeButton("Delete", (dialog, which) -> {
+                    .setNegativeButton(R.string.delete, (dialog, which) -> {
                         // Delete record from database
                         String imageUrl = savedImage.getImageUrl();
                         DBConnect dbConnect = new DBConnect(context);
@@ -86,7 +86,11 @@ public class SavedImagesAdapter extends ArrayAdapter<SavedImage> {
                         } else {
                             Toast.makeText(context, R.string.deletefail, Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    })
+                        .setNeutralButton(android.R.string.cancel, (dialog, which) -> {
+                // Cancel action
+                dialog.dismiss();
+            });
             builder.show();
         });
         return convertView;

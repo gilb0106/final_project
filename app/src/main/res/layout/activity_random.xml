@@ -15,7 +15,7 @@
         android:id="@+id/textViewRandomDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Date: "
+        android:text="@string/date"
         android:textSize="17sp"
         android:textStyle="bold" />
 
@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/imageViewRandomImage"
-        android:text="URL: "
+        android:text="@string/url"
         android:textSize="17sp"
         android:textStyle="bold" />
 
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewRandomImageURL"
-        android:text="HDURL: "
+        android:text="@string/hdurl"
         android:textSize="17sp"
         android:textStyle="bold" />
 
@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/textViewRandomHDImageURL"
-        android:text="Generate Random Image" />
+        android:text="@string/genrand" />
 
     <Button
         android:id="@+id/saveButton"

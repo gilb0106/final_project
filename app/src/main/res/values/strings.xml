@@ -4,6 +4,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="help">Help</string>
+    <string name="cancel">Cancel</string>
     <string name="home">Home</string>
     <string name="saved">Saved Images</string>
     <string name="savedsuccess">Saved Images Succssfully</string>
@@ -22,6 +23,7 @@
     <string name="search">Search</string>
     <string name="fail">Failed to load image</string>
     <string name="failfetch">Failed to fetch image</string>
+    <string name="successfetch">Image Fetch Successful</string>
     <string name="welcome">Welcome back</string>
     <string name="changeuser">Do you want to keep using the name</string>
     <string name="yes">Yes</string>
@@ -32,6 +34,9 @@
     <string name="personalgreet2">Please enter your name to personalize the experience:</string>
     <string name="deletesuccess">Image deleted</string>
     <string name="deletefail">Failed to delete image</string>
+    <string name="question">Do you wish to view the image or delete?</string>
+    <string name="view">Failed to delete image</string>
+    <string name="delete">Failed to delete image</string>
 
 
 

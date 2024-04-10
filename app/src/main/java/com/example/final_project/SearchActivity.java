@@ -71,18 +71,15 @@ public class SearchActivity extends AppCompatActivity {
         buttonSave = findViewById(R.id.buttonSave);
         progressBar = findViewById(R.id.progressBar);
 
-        buttonFetch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePicker();
+        buttonFetch.setOnClickListener(v -> {
+            if (editTextDate.getText().toString().isEmpty()) {
+                showDatePicker(); // If editTextDate is empty, show date picker
+            } else {
+                String manuallyEnteredDate = editTextDate.getText().toString();
+                fetchNASAImage(manuallyEnteredDate); // Fetch image for manually entered date
             }
         });
-        buttonSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveToDatabase();
-            }
-        });
+        buttonSave.setOnClickListener(v -> saveToDatabase());
     }
 
     private void showDatePicker() {
@@ -100,7 +97,8 @@ public class SearchActivity extends AppCompatActivity {
                         calendar.set(Calendar.YEAR, year);
                         calendar.set(Calendar.MONTH, monthOfYear);
                         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                        SimpleDateFormat dateFormat =
+                                new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                         editTextDate.setText(dateFormat.format(calendar.getTime()));
                         fetchNASAImage(dateFormat.format(calendar.getTime()));
                     }
@@ -184,17 +182,17 @@ public class SearchActivity extends AppCompatActivity {
                                 // Save the bitmap to the device if needed
                                 saveBitmapToStorage(bitmap, date);
                             } else {
-                                Toast.makeText(SearchActivity.this, "Failed to load image", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SearchActivity.this, R.string.fail, Toast.LENGTH_SHORT).show();
                             }
                         }
                     }.execute();
                     textViewHDURL.setText("HDURL: " + hdUrl);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(SearchActivity.this, "Failed to parse response", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SearchActivity.this, R.string.failfetch, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(SearchActivity.this, "Failed to fetch image", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SearchActivity.this, R.string.failfetch, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -218,9 +216,9 @@ public class SearchActivity extends AppCompatActivity {
             protected void onPostExecute(String filePath) {
                 super.onPostExecute(filePath);
                 if (filePath != null) {
-                    Toast.makeText(SearchActivity.this, "Bitmap saved to " + filePath, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SearchActivity.this, R.string.successfetch, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(SearchActivity.this, "Failed to save bitmap", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SearchActivity.this, R.string.fail, Toast.LENGTH_SHORT).show();
                 }
             }
         }.execute();
@@ -238,7 +236,7 @@ public class SearchActivity extends AppCompatActivity {
         // Check the result of the insertion operation
         if (result != -1) {
             // Database insertion successful
-            Toast.makeText(SearchActivity.this, "Data saved to database successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SearchActivity.this, R.string.savedsuccess, Toast.LENGTH_SHORT).show();
 
             // Save the bitmap to the device
             BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
