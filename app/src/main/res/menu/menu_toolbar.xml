@@ -15,7 +15,7 @@
     <item
         android:id="@+id/Choice3"
         android:icon="@drawable/lotto"
-        android:title="@string/random"
+        android:title="@string/navrandom"
         app:showAsAction="ifRoom"/>
 
     <item

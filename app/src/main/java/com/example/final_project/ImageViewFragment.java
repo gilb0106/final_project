@@ -64,7 +64,7 @@ public class ImageViewFragment extends Fragment {
 
         return rootView;
     }
-
+//load image fragment and display image and its details
     private void loadImageFromStorage(String date) {
         try {
             ContextWrapper contextWrapper = new ContextWrapper(getActivity().getApplicationContext());
