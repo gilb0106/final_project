@@ -49,10 +49,10 @@ public class ImageViewFragment extends Fragment {
             String hdUrl = args.getString("hdUrl");
             savedImage = new SavedImage(date, imageUrl, hdUrl);
 
-            textViewDate.setText("Date: " + savedImage.getDate());
-            textViewURL.setText("URL: " + savedImage.getImageUrl());
+            textViewDate.setText(savedImage.getDate());
+            textViewURL.setText(savedImage.getImageUrl());
             textViewURL.setMovementMethod(LinkMovementMethod.getInstance());
-            textViewHDURL.setText("HD URL: " + savedImage.getHdUrl());
+            textViewHDURL.setText(savedImage.getHdUrl());
             textViewHDURL.setMovementMethod(LinkMovementMethod.getInstance());
 
             loadImageFromStorage(savedImage.getDate());

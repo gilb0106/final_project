@@ -25,6 +25,7 @@
         </activity>
         <activity android:name=".SearchActivity"></activity>
         <activity android:name=".SavedActivity"></activity>
+        <activity android:name=".RandomActivity"></activity>
     </application>
 
 </manifest>

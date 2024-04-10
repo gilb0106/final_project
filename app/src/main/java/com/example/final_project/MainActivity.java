@@ -115,14 +115,12 @@ public class MainActivity extends AppCompatActivity implements
         builder.setMessage("Do you want to keep using the name '" + userName + "'?");
 
         // Set up the buttons
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Personalize the greeting with the saved user's name
-                textViewHeading.setText("Hello " + userName + " Welcome To NASA Image App");
-            }
+        builder.setPositiveButton("Yes", (dialog, which) -> {
+            // Personalize the greeting with the saved user's name
+            textViewHeading.setText("Hello " + userName + " Welcome To NASA Image App");
         });
-        builder.setNegativeButton("No, enter a new name", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("No, enter a new name",
+                new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Prompt the user to enter a new name
@@ -137,25 +135,22 @@ public class MainActivity extends AppCompatActivity implements
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Welcome");
         builder.setMessage("Please enter your name to personalize the experience:");
-
         // Set up the input
         final EditText input = new EditText(this);
         builder.setView(input);
 
         // Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                userName = input.getText().toString();
-                // Save user's name to SharedPreferences
-                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("userName", userName);
-                editor.apply();
-                // Personalize the greeting
-                textViewHeading.setText("Hello " + userName + " Welcome To NASA Image App");
-            }
-        });
+        builder.setPositiveButton("OK",
+                (dialog, which) -> {
+                    userName = input.getText().toString();
+                    // Save user's name to SharedPreferences
+                    SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("userName", userName);
+                    editor.apply();
+                    // Personalize the greeting
+                    textViewHeading.setText("Hello " + userName + " Welcome To NASA Image App");
+                });
         builder.setCancelable(false); // Prevent dismissing the dialog by clicking outside
         builder.show();
     }
@@ -233,9 +228,7 @@ public class MainActivity extends AppCompatActivity implements
                                 // Display the bitmap
                                 imageViewTodaysImage.setImageBitmap(bitmap);
                                 imageViewTodaysImage.setVisibility(View.VISIBLE);
-
                                 // Save the bitmap to the device if needed
-                                // Code for saving image to device can be added here
                             } else {
                                 Toast.makeText(MainActivity.this, "Failed to load image", Toast.LENGTH_SHORT).show();
                             }
@@ -244,10 +237,12 @@ public class MainActivity extends AppCompatActivity implements
                     textViewHDImageURL.setText("HDURL: " + hdUrl);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(MainActivity.this, "Failed to parse response", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,
+                            "Failed to parse response", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(MainActivity.this, "Failed to fetch image", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this,
+                        "Failed to fetch image", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -263,6 +258,9 @@ public class MainActivity extends AppCompatActivity implements
             startActivity(intent);
         } else if (id == R.id.savedImages) {
             Intent intent = new Intent(this, SavedActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.randomImages) {
+            Intent intent = new Intent(this, RandomActivity.class);
             startActivity(intent);
         } else if (id == R.id.Exit) {
             finishAffinity(); // close app

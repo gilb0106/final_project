@@ -13,6 +13,12 @@
         android:id="@+id/savedImages"
         android:title="Saved Images"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/randomImages"
+        android:title="Random Images"
+        app:showAsAction="never"/>
+
     <item
         android:id="@+id/Exit"
         android:title="Exit"
