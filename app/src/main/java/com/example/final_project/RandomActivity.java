@@ -141,7 +141,6 @@ public class RandomActivity extends AppCompatActivity {
                             }
                         }
                     }.execute(imageUrl);
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(RandomActivity.this, "Failed to parse response",
@@ -153,7 +152,6 @@ public class RandomActivity extends AppCompatActivity {
             }
         }
     }
-
     public void saveImage(View view) {
         String date = textViewRandomDate.getText().
                 toString().replace("Date: ", "");
@@ -184,7 +182,6 @@ public class RandomActivity extends AppCompatActivity {
             Toast.makeText(this, "Failed to save image details", Toast.LENGTH_SHORT).show();
         }
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
