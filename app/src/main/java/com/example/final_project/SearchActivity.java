@@ -103,11 +103,9 @@ public class SearchActivity extends AppCompatActivity {
         } else if (id == R.id.Choice4) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(getString(R.string.searchhelp))
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User clicked OK button, dismiss the dialog
-                            dialog.dismiss();
-                        }
+                    .setPositiveButton("OK", (dialog, id1) -> {
+                        // User clicked OK button, dismiss the dialog
+                        dialog.dismiss();
                     });
             AlertDialog dialog = builder.create();
             dialog.show();
