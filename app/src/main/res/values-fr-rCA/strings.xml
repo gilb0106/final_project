@@ -28,6 +28,10 @@
     <string name="yes">Oui</string>
     <string name="no">Non, entrez un nouveau nom</string>
     <string name="greet">Bonjour</string>
+    <string name="navsaved">Enregistré</string>
+    <string name="navhome">Accueil</string>
+    <string name="navrandom">Aléatoire</string>
+    <string name="navsearchimg">Recherche</string>
     <string name="greet2">Bienvenue a la aplicación de imágenes de la NASA</string>
     <string name="personalgreet">Bienvenidoa</string>
     <string name="personalgreet2">Por favor, ingresa tu nombre para personalizar la experiencia:</string>

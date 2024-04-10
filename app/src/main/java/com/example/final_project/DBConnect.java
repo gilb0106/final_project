@@ -60,12 +60,4 @@ public class DBConnect extends SQLiteOpenHelper {
         db.close();
         return result;
     }
-    public void undoDeleteImage(String imageUrl) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        // Insert the image details back into the database
-        values.put(COLUMN_NASA_URL, imageUrl);
-        db.insert(TABLE_MYNASA, null, values);
-        db.close();
-    }
 }

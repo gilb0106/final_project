@@ -3,7 +3,6 @@ package com.example.final_project;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -12,7 +11,6 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,9 +26,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.example.final_project.DBConnect;
-import com.example.final_project.R;
-import com.example.final_project.SearchActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -92,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements
             showNameDialog();
         } else {
             // If user's name is saved, ask the user if they want to keep it or enter a new one
-            askUserToKeepOrEnterNew();
+            askUser();
         }
 
         fetchNASAImage();
@@ -126,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements
         } //  if item from menu_toolbar selected, display applicable toast message
         return true;
     }
-    private void askUserToKeepOrEnterNew() {
+    private void askUser() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.welcome));
         builder.setMessage(getString(R.string.changeuser) + " " + userName + "'?");
@@ -246,6 +241,7 @@ public class MainActivity extends AppCompatActivity implements
                             }
                             return null;
                         }
+
                         @Override
                         protected void onPostExecute(Bitmap bitmap) {
                             super.onPostExecute(bitmap);

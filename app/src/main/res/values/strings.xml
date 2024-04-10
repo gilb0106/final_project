@@ -5,12 +5,16 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="help">Help</string>
     <string name="cancel">Cancel</string>
-    <string name="home">Home</string>
-    <string name="saved">Saved Images</string>
+    <string name="home">Home 1.0</string>
+    <string name="navsaved">Saved</string>
+    <string name="navhome">Home</string>
+    <string name="navrandom">Random</string>
+    <string name="navsearchimg">Search</string>
+    <string name="saved">Saved  1.0</string>
     <string name="savedsuccess">Saved Images Succssfully</string>
     <string name="dbfail">Failed to save data to database</string>
-    <string name="random">Random Images</string>
-    <string name="searchimg">Search Images</string>
+    <string name="random">Random 1.0</string>
+    <string name="searchimg">Search 1.0</string>
     <string name="exits">Exit</string>
     <string name="hello">Hello Welcome to the NASA Image App</string>
     <string name="today">Today\'sImage</string>

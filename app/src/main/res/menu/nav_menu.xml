@@ -3,17 +3,17 @@
 
     <item
         android:id="@+id/Home"
-        android:title="@string/home"
+        android:title="@string/navhome"
         android:icon="@drawable/enter"
         app:showAsAction="never"/>
     <item
         android:id="@+id/searchImages"
         android:icon="@drawable/search"
-        android:title="@string/searchimg"
+        android:title="@string/navsearchimg"
         app:showAsAction="never"/>
     <item
         android:id="@+id/savedImages"
-        android:title="@string/saved"
+        android:title="@string/navsaved"
         android:icon="@drawable/img"
         app:showAsAction="never"/>
 

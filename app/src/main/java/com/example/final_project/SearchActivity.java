@@ -103,9 +103,11 @@ public class SearchActivity extends AppCompatActivity {
         } else if (id == R.id.Choice4) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(getString(R.string.searchhelp))
-                    .setPositiveButton("OK", (dialog, id1) -> {
-                        // User clicked OK button, dismiss the dialog
-                        dialog.dismiss();
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User clicked OK button, dismiss the dialog
+                            dialog.dismiss();
+                        }
                     });
             AlertDialog dialog = builder.create();
             dialog.show();
@@ -137,7 +139,7 @@ public class SearchActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    private class FetchDataTask extends AsyncTask<String, Void, JSONObject> {
+    private class FetchDataTask extends AsyncTask<String, Integer, JSONObject> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -169,7 +171,7 @@ public class SearchActivity extends AppCompatActivity {
                 // Introduce a delay for demonstration purposes
                 for (int i = 0; i < 3; i++) {
                     Thread.sleep(1000); // Sleep for 1 second
-                    publishProgress(); // Update progress
+                    publishProgress((i + 1) * 33); // Update progress
                 }
 
                 return new JSONObject(response.toString());
@@ -185,6 +187,13 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            // Update progress bar
+            progressBar.setProgress(values[0]);
+        }
+
+        @Override
         protected void onPostExecute(JSONObject jsonResponse) {
             progressBar.setVisibility(View.GONE);
             buttonFetch.setEnabled(true); // Re-enable button
@@ -193,7 +202,7 @@ public class SearchActivity extends AppCompatActivity {
                     String imageUrl = jsonResponse.getString("url");
                     String hdUrl = jsonResponse.optString("hdurl", "");
                     String date = jsonResponse.getString("date");
-                    textViewDate.setText("Date: " + date);
+                    textViewDate.setText(getString(R.string.date) + date);
                     textViewURL.setText("URL: " + imageUrl);
                     textViewHDURL.setText("HDURL: " + hdUrl);
 
@@ -243,7 +252,7 @@ public class SearchActivity extends AppCompatActivity {
         // Access the image URL, HD URL, and other relevant information from your UI elements
         String imageUrl = textViewURL.getText().toString().substring(5);
         String hdUrl = textViewHDURL.getText().toString().substring(6);
-        String date = textViewDate.getText().toString().substring(6);
+        String date = textViewDate.getText().toString().substring(5);
 
         // Call the database insertion method
         DBConnect dbConnect = new DBConnect(SearchActivity.this);
