@@ -24,7 +24,4 @@ public class SavedImage {
         return hdUrl;
     }
 
-    public String getImageFilePath() {
-        return imageFilePath;
-    }
 }

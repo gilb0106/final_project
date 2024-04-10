@@ -75,11 +75,11 @@ public class ImageViewFragment extends Fragment {
                 imageView.setImageBitmap(bitmap);
                 imageView.setVisibility(View.VISIBLE);
             } else {
-                Toast.makeText(getActivity(), "Failed to load image", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.fail, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getActivity(), "Failed to load image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.fail, Toast.LENGTH_SHORT).show();
         }
     }
 

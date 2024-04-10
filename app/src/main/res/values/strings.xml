@@ -1,7 +1,38 @@
 <resources>
-    <string name="app_name">final_project</string>
+    <string name="app_name">NasaImg 1.0</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="help">Help</string>
+    <string name="home">Home</string>
+    <string name="saved">Saved Images</string>
+    <string name="savedsuccess">Saved Images Succssfully</string>
+    <string name="dbfail">Failed to save data to database</string>
+    <string name="random">Random Images</string>
+    <string name="searchimg">Search Images</string>
+    <string name="exits">Exit</string>
+    <string name="hello">Hello Welcome to the NASA Image App</string>
+    <string name="today">Today\'sImage</string>
+    <string name="date">Date: </string>
+    <string name="url">URL: </string>
+    <string name="hdurl">URL: </string>
+    <string name="genrand">Generate Random Image</string>
+    <string name="save">Save</string>
+    <string name="enterdate">Enter Date (YYYY-MM-DD)</string>
+    <string name="search">Search</string>
+    <string name="fail">Failed to load image</string>
+    <string name="failfetch">Failed to fetch image</string>
+    <string name="welcome">Welcome back</string>
+    <string name="changeuser">Do you want to keep using the name</string>
+    <string name="yes">Yes</string>
+    <string name="no">No, enter a new name</string>
+    <string name="greet">Hello</string>
+    <string name="greet2">Welcome To NASA Image App</string>
+    <string name="personalgreet">Welcome</string>
+    <string name="personalgreet2">Please enter your name to personalize the experience:</string>
+    <string name="deletesuccess">Image deleted</string>
+    <string name="deletefail">Failed to delete image</string>
+
+
+
 </resources>

@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/imageViewRandomImage"
-        android:text="Image URL: "
+        android:text="URL: "
         android:textSize="17sp"
         android:textStyle="bold" />
 
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewRandomImageURL"
-        android:text="HD Image URL: "
+        android:text="HDURL: "
         android:textSize="17sp"
         android:textStyle="bold" />
 
@@ -60,6 +60,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:onClick="saveImage"
-        android:text="Save Image" />
+        android:text="@string/save" />
 
 </RelativeLayout>

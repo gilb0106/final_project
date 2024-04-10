@@ -21,7 +21,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" Date: "
+            android:text="@string/date"
             android:textSize="17dp"
             android:textStyle="bold"
             android:layout_row="0"
@@ -38,7 +38,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" URL:"
+            android:text="@string/url"
             android:textSize="17dp"
             android:textStyle="bold"
             android:layout_row="1"
@@ -56,7 +56,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" HD: "
+            android:text="@string/hdurl"
             android:textSize="17dp"
             android:textStyle="bold"
             android:layout_row="2"

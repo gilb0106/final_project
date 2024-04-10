@@ -254,21 +254,22 @@ public class SearchActivity extends AppCompatActivity {
                 FileOutputStream fileOutputStream = new FileOutputStream(filePath);
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
                 fileOutputStream.close();
-                Toast.makeText(this, "Image saved to device", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.savedsuccess,
+                        Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.failfetch,
+                        Toast.LENGTH_SHORT).show();
             }
         } else {
             // Database insertion failed
-            Toast.makeText(SearchActivity.this, "Failed to save data to database", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SearchActivity.this,
+                    R.string.dbfail, Toast.LENGTH_SHORT).show();
         }
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         if (id == android.R.id.home) {
             onBackPressed();
             return true;

@@ -30,7 +30,8 @@ public class SavedImagesAdapter extends ArrayAdapter<SavedImage> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_saved_image, parent, false);
+            convertView = LayoutInflater.from(context).inflate
+                    (R.layout.item_saved_image, parent, false);
         }
 
         SavedImage savedImage = savedImageList.get(position);
@@ -53,7 +54,8 @@ public class SavedImagesAdapter extends ArrayAdapter<SavedImage> {
                         args.putString("imageUrl", savedImage.getImageUrl());
                         args.putString("hdUrl", savedImage.getHdUrl());
                         fragment.setArguments(args);
-                        ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction()
+                        ((AppCompatActivity) context).getSupportFragmentManager()
+                                .beginTransaction()
                                 .replace(R.id.fragment_container, fragment)
                                 .addToBackStack(null)
                                 .commit();
@@ -66,7 +68,8 @@ public class SavedImagesAdapter extends ArrayAdapter<SavedImage> {
                         if (result != -1) {
                             // Delete local copy of bitmap
                             try {
-                                ContextWrapper contextWrapper = new ContextWrapper(context.getApplicationContext());
+                                ContextWrapper contextWrapper =
+                                        new ContextWrapper(context.getApplicationContext());
                                 File directory = contextWrapper.getDir("images", Context.MODE_PRIVATE);
                                 File filePath = new File(directory, savedImage.getDate() + ".jpg");
                                 if (filePath.exists()) {
@@ -79,15 +82,13 @@ public class SavedImagesAdapter extends ArrayAdapter<SavedImage> {
                             // Remove item from the list
                             savedImageList.remove(position);
                             notifyDataSetChanged();
-                            Toast.makeText(context, "Image deleted", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.deletesuccess, Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(context, "Failed to delete image", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.deletefail, Toast.LENGTH_SHORT).show();
                         }
                     });
-
             builder.show();
         });
-
         return convertView;
     }
 }

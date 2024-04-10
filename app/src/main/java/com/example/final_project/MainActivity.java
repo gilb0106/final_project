@@ -98,7 +98,6 @@ public class MainActivity extends AppCompatActivity implements
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        String message = null;
         int id = item.getItemId();
         if (id == R.id.Choice1) {
             Intent intent = new Intent(this, SearchActivity.class);
@@ -106,35 +105,36 @@ public class MainActivity extends AppCompatActivity implements
         } else if (id == R.id.Choice2) {
             Intent intent = new Intent(this, SavedActivity.class);
             startActivity(intent);
+        } else if (id == R.id.Choice3) {
+            Intent intent = new Intent(this, RandomActivity.class);
+            startActivity(intent);
         } //  if item from menu_toolbar selected, display applicable toast message
         return true;
     }
     private void askUserToKeepOrEnterNew() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Welcome back");
-        builder.setMessage("Do you want to keep using the name '" + userName + "'?");
+        builder.setTitle(getString(R.string.welcome));
+        builder.setMessage(getString(R.string.changeuser) + " " + userName + "'?");
 
         // Set up the buttons
-        builder.setPositiveButton("Yes", (dialog, which) -> {
+        builder.setPositiveButton(R.string.yes, (dialog, which) -> {
             // Personalize the greeting with the saved user's name
-            textViewHeading.setText("Hello " + userName + " Welcome To NASA Image App");
+            textViewHeading.setText(getString(R.string.greet)+ " " + userName +
+                    " " + getString(R.string.greet2));
         });
-        builder.setNegativeButton("No, enter a new name",
-                new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Prompt the user to enter a new name
-                showNameDialog();
-            }
-        });
+        builder.setNegativeButton(R.string.no,
+                (dialog, which) -> {
+                    // Prompt the user to enter a new name
+                    showNameDialog();
+                });
         builder.setCancelable(false); // Prevent dismissing the dialog by clicking outside
         builder.show();
     }
 
     private void showNameDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Welcome");
-        builder.setMessage("Please enter your name to personalize the experience:");
+        builder.setTitle(R.string.personalgreet);
+        builder.setMessage(R.string.personalgreet2);
         // Set up the input
         final EditText input = new EditText(this);
         builder.setView(input);
@@ -230,7 +230,8 @@ public class MainActivity extends AppCompatActivity implements
                                 imageViewTodaysImage.setVisibility(View.VISIBLE);
                                 // Save the bitmap to the device if needed
                             } else {
-                                Toast.makeText(MainActivity.this, "Failed to load image", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, R.string.fail,
+                                        Toast.LENGTH_SHORT).show();
                             }
                         }
                     }.execute();
@@ -238,11 +239,11 @@ public class MainActivity extends AppCompatActivity implements
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(MainActivity.this,
-                            "Failed to parse response", Toast.LENGTH_SHORT).show();
+                            R.string.failfetch, Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Toast.makeText(MainActivity.this,
-                        "Failed to fetch image", Toast.LENGTH_SHORT).show();
+                        R.string.failfetch, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -277,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements
         DBConnect dbConnect = new DBConnect(this);
         long result = dbConnect.insertData(date, imageUrl, hdImageUrl);
         if (result != -1) {
-            Toast.makeText(this, "Image details saved to database", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.savedsuccess, Toast.LENGTH_SHORT).show();
             // Save the image to device
             BitmapDrawable drawable = (BitmapDrawable) imageViewTodaysImage.getDrawable();
             Bitmap bitmap = drawable.getBitmap();
@@ -290,13 +291,14 @@ public class MainActivity extends AppCompatActivity implements
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
                 fileOutputStream.close();
                 // Provide feedback to the user
-                Toast.makeText(this, "Image saved to device", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.savedsuccess,
+                        Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.fail, Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Failed to save image details", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.fail, Toast.LENGTH_SHORT).show();
         }
     }
     @Override

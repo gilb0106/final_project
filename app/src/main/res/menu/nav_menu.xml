@@ -3,25 +3,30 @@
 
     <item
         android:id="@+id/Home"
-        android:title="Home"
+        android:title="@string/home"
+        android:icon="@drawable/enter"
         app:showAsAction="never"/>
     <item
         android:id="@+id/searchImages"
-        android:title="Search Images"
+        android:icon="@drawable/search"
+        android:title="@string/searchimg"
         app:showAsAction="never"/>
     <item
         android:id="@+id/savedImages"
-        android:title="Saved Images"
+        android:title="@string/saved"
+        android:icon="@drawable/img"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/randomImages"
-        android:title="Random Images"
+        android:title="@string/random"
+        android:icon="@drawable/lotto"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/Exit"
-        android:title="Exit"
+        android:title="@string/exits"
+        android:icon="@drawable/exit"
         app:showAsAction="never"/>
 
 

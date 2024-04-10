@@ -15,7 +15,7 @@
         android:id="@+id/editTextDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Date (YYYY-MM-DD)"
+        android:hint="@string/enterdate"
         android:inputType="date"
         android:layout_below="@id/toolbar"/>
 
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/editTextDate"
         android:layout_marginTop="16dp"
-        android:text="Fetch Image"/>
+        android:text="@string/search"/>
 
     <Button
         android:id="@+id/buttonSave"
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/buttonFetch"
         android:layout_marginTop="16dp"
-        android:text="Save"/>
+        android:text="@string/save"/>
 
     <ProgressBar
         android:id="@+id/progressBar"

@@ -14,7 +14,13 @@
 
     <item
         android:id="@+id/Choice3"
-        android:icon="@drawable/help"
+        android:icon="@drawable/lotto"
         android:title="choice3"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/Choice4"
+        android:icon="@drawable/help"
+        android:title="@string/help"
+        app:showAsAction="collapseActionView"/>
 </menu>

@@ -55,12 +55,7 @@ public class RandomActivity extends AppCompatActivity {
         saveButton.setVisibility(View.INVISIBLE);
 
         Button generateButton = findViewById(R.id.generateButton);
-        generateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                generateRandomImage();
-            }
-        });
+        generateButton.setOnClickListener(v -> generateRandomImage());
     }
 
     private void generateRandomImage() {
@@ -68,7 +63,8 @@ public class RandomActivity extends AppCompatActivity {
         calendar.set(1995, Calendar.JUNE, 15); // Set minimum date to June 15, 1995
         long minDateMillis = calendar.getTimeInMillis(); // Minimum time
         long maxDateMillis = System.currentTimeMillis(); // Current time
-        long randomDateMillis = (long) (Math.random() * (maxDateMillis - minDateMillis) + minDateMillis);
+        long randomDateMillis = (long) (Math.random()
+                * (maxDateMillis - minDateMillis) + minDateMillis);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String randomDate = dateFormat.format(randomDateMillis);
@@ -136,18 +132,18 @@ public class RandomActivity extends AppCompatActivity {
                                 imageViewRandomImage.setImageBitmap(bitmap);
                                 saveButton.setVisibility(View.VISIBLE); // Set save button visible after image is loaded
                             } else {
-                                Toast.makeText(RandomActivity.this, "Failed to load image",
+                                Toast.makeText(RandomActivity.this, R.string.fail,
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
                     }.execute(imageUrl);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(RandomActivity.this, "Failed to parse response",
+                    Toast.makeText(RandomActivity.this, R.string.fail,
                             Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(RandomActivity.this, "Failed to fetch image",
+                Toast.makeText(RandomActivity.this, R.string.failfetch,
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -163,7 +159,7 @@ public class RandomActivity extends AppCompatActivity {
         DBConnect dbConnect = new DBConnect(this);
         long result = dbConnect.insertData(date, imageUrl, hdImageUrl);
         if (result != -1) {
-            Toast.makeText(this, "Image details saved to database", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.savedsuccess, Toast.LENGTH_SHORT).show();
             BitmapDrawable drawable = (BitmapDrawable) imageViewRandomImage.getDrawable();
             Bitmap bitmap = drawable.getBitmap();
             try {
@@ -173,13 +169,13 @@ public class RandomActivity extends AppCompatActivity {
                 FileOutputStream fileOutputStream = new FileOutputStream(filePath);
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
                 fileOutputStream.close();
-                Toast.makeText(this, "Image saved to device", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.savedsuccess, Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.fail, Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Failed to save image details", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.fail, Toast.LENGTH_SHORT).show();
         }
     }
     @Override
