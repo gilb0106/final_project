@@ -247,7 +247,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void saveToDatabase() {
-        // Access the image URL, HD URL, and other relevant information
+        // Access the image URL, HD URL
         String imageUrl = textViewURL.getText().toString().substring(5);
         String hdUrl = textViewHDURL.getText().toString().substring(6);
         String date = textViewDate.getText().toString().substring(5);
