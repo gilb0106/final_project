@@ -257,7 +257,7 @@ public class SearchActivity extends AppCompatActivity {
         long result = dbConnect.insertData(date, imageUrl, hdUrl);
 
         // Check the result of the insertion operation
-        if (result != -1) {
+        if (result != -1) .
             // Database insertion successful
             Toast.makeText(SearchActivity.this, R.string.savedsuccess, Toast.LENGTH_SHORT).show();
 
